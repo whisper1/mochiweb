@@ -45,8 +45,8 @@
 % 5 minute default idle timeout
 -define(IDLE_TIMEOUT, 300000).
 
-% Maximum recv_body() length of 1MB
--define(MAX_RECV_BODY, (1024*1024)).
+% Maximum recv_body() length of 4MB
+-define(MAX_RECV_BODY, (2048*2048)).
 
 %% @spec new(Socket, Method, RawPath, Version, headers()) -> request()
 %% @doc Create a new request instance.
