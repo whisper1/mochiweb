@@ -87,26 +87,17 @@ get(version, {?MODULE, [_Socket, _Method, _RawPath, Version, _Headers]}) ->
 get(headers, {?MODULE, [_Socket, _Method, _RawPath, _Version, Headers]}) ->
     Headers;
 get(peer, {?MODULE, [Socket, _Method, _RawPath, _Version, _Headers]}=THIS) ->
-    case mochiweb_socket:peername(Socket) of
-        {ok, {Addr={10, _, _, _}, _Port}} ->
-            case get_header_value("x-forwarded-for", THIS) of
-                undefined ->
-                    inet_parse:ntoa(Addr);
-                Hosts ->
-                    string:strip(lists:last(string:tokens(Hosts, ",")))
-            end;
-        {ok, {{127, 0, 0, 1}, _Port}} ->
-            case get_header_value("x-forwarded-for", THIS) of
-                undefined ->
-                    "127.0.0.1";
-                Hosts ->
-                    string:strip(lists:last(string:tokens(Hosts, ",")))
-            end;
+  case get_header_value("x-forwarded-for", THIS) of
+    undefined ->
+      case mochiweb_socket:peername(Socket) of
         {ok, {Addr, _Port}} ->
-            inet_parse:ntoa(Addr);
+          inet_parse:ntoa(Addr);
         {error, enotconn} ->
-            exit(normal)
-    end;
+          "127.0.0.1"
+      end
+    Hosts ->
+      string:strip(lists:last(string:tokens(Hosts, ",")))
+  end;
 get(path, {?MODULE, [_Socket, _Method, RawPath, _Version, _Headers]}) ->
     case erlang:get(?SAVE_PATH) of
         undefined ->
