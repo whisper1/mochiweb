@@ -94,7 +94,7 @@ get(peer, {?MODULE, [Socket, _Method, _RawPath, _Version, _Headers]}=THIS) ->
           inet_parse:ntoa(Addr);
         {error, enotconn} ->
           "127.0.0.1"
-      end
+      end;
     Hosts ->
       string:strip(lists:last(string:tokens(Hosts, ",")))
   end;
